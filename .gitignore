@@ -1,4 +1,5 @@
 /.idea
+/rust/target
 
 *.test
 *.out
