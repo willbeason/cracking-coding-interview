@@ -23,6 +23,7 @@ fn bench_unique_characters(c: &mut Criterion) {
             });
         }
     }
+
     group.finish()
 }
 

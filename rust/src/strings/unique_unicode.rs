@@ -1,6 +1,7 @@
 use rand::Rng;
 use rand::distr::StandardUniform;
 use std::collections::HashSet;
+use std::mem::take;
 
 pub fn get_random_string(len: usize) -> String {
     rand::rng()
@@ -34,7 +35,7 @@ pub fn unique_unicode_2a(s: &str) -> bool {
 
 /// unique_unicode_3 is an initial bitarray attempt.
 pub fn unique_unicode_3(s: &str) -> bool {
-    let mut bitarray = [false; 1024*1024];
+    let mut bitarray = [false; std::char::MAX as usize + 1];
     for c in s.chars() {
         if bitarray[c as usize] {
             return false;
@@ -43,35 +44,124 @@ pub fn unique_unicode_3(s: &str) -> bool {
     }
     true
 }
+
+/// UniqueUnicode3A is a solution that pre-allocates a bit array of all possible Unicode points
+/// to use to identify duplicate characters in strings. Resets the bit array each time it is called.
+/// 
+/// Not threadsafe.
+pub struct UniqueUnicode3A {
+    bitarray: Box<[bool; std::char::MAX as usize + 1]>,
+}
+
+impl UniqueUnicode3A {
+    pub fn new() -> Self {
+        Self {
+            bitarray: Box::new([false; std::char::MAX as usize + 1]),
+        }
+    }
+
+    pub fn solution(&mut self, s: &str) -> bool {
+        let mut result = true;
+        let mut idx = 0;
+
+        for c in s.chars() {
+            if self.bitarray[c as usize] {
+                result = false;
+                break;
+            }
+            idx += 1;
+            self.bitarray[c as usize] = true;
+        }
+
+        s.chars().take(idx).for_each(|c| {
+            self.bitarray[c as usize] = false;
+        });
+
+        result
+    }
+}
+
+/// UniqueUnicode3B is an AI-suggested modification to UniqueUnicode3B.
+pub struct UniqueUnicode3B {
+    bitarray: Box<[bool; std::char::MAX as usize + 1]>,
+}
+
+impl UniqueUnicode3B {
+    pub fn new() -> Self {
+        Self {
+            bitarray: Box::new([false; std::char::MAX as usize + 1]),
+        }
+    }
+
+    pub fn solution(&mut self, s: &str) -> bool {
+        // Keep track of positions we've modified
+        let mut modified_positions = Vec::with_capacity(s.len());
+
+        for c in s.chars() {
+            let pos = c as usize;
+            if self.bitarray[pos] {
+                // Reset all modifications before returning
+                for &p in &modified_positions {
+                    self.bitarray[p] = false;
+                }
+                return false;
+            }
+            self.bitarray[pos] = true;
+            modified_positions.push(pos);
+        }
+
+        // Reset all modifications
+        for &pos in &modified_positions {
+            self.bitarray[pos] = false;
+        }
+        true
+    }
+
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    const SOLUTIONS: [(&str, fn(&str) -> bool); 3] = [
-        ("1", unique_unicode_1),
-        ("2", unique_unicode_2a),
-        ("3", unique_unicode_3),
-    ];
-
     #[test]
     fn test_unique_unicode() {
-        for (s, f) in SOLUTIONS {
+        // assert!(false, "{}", get_random_string(1000).len());
+
+        let mut solution3a = UniqueUnicode3A::new();
+        let mut solution3b = UniqueUnicode3B::new();
+
+        let solutions: [(&str, Box<dyn FnMut(&str) -> bool>); 5] = [
+            ("1", Box::new(unique_unicode_1)),
+            ("2", Box::new(unique_unicode_2a)),
+            ("3", Box::new(unique_unicode_3)),
+            ("3a", Box::new(|s| solution3a.solution(s))),
+            ("3b", Box::new(|s| solution3b.solution(s))),
+        ];
+
+        for (s, mut f) in solutions {
             assert!(f(""));
             assert!(f("a"), "Solution {}", s);
             assert!(!f("aa"), "Solution {}", s);
             assert!(f("ab"), "Solution {}", s);
             assert!(f("abc"), "Solution {}", s);
             assert!(!f("abca"), "Solution {}", s);
+            assert!(f("abcdefghij"), "Solution {}", s);
+            assert!(!f("abcdefghija"), "Solution {}", s);
+            assert!(f("abcdefghijklmnopqrstuv"), "Solution {}", s);
+            assert!(!f("abcdefghijklmnopqrstuva"), "Solution {}", s);
             assert!(!f("ää"), "Solution {}, f({}) = {}", s, "ää", f("ää"));
             assert!(f("aä"), "Solution {}, f({}) = {}", s, "aä", f("aä"));
             assert!(f("芼罡"), "Solution {}, f({}) = {}", s, "芼罡", f("芼罡"));
             assert!(!f("芼芼"), "Solution {}, f({}) = {}", s, "芼芼", f("芼芼"));
             assert!(f("ㅱ芼"), "Solution {}, f({}) = {}", s, "ㅱ芼", f("ㅱ芼"));
             assert!(!f("ㅱㅱ"), "Solution {}, f({}) = {}", s, "ㅱㅱ", f("ㅱㅱ"));
-            assert!(!f("𓀃𓀃"), "Solution {}, f({}) = {}", s, "𓀃𓀃", f("𓀃𓀃"));
+            // These cases are a mix of hieroglyphs and control characters. They are unlikely to display properly.
             assert!(!f("𓀃𓀃"), "Solution {}, f({}) = {}", s, "𓀃𓀃", f("𓀃𓀃"));
             assert!(f("󠇯𓀃"), "Solution {}, f({}) = {}", s, "󠇯𓀃", f("󠇯𓀃"));
             assert!(!f("󠇯󠇯󠇯"), "Solution {}, f({}) = {}", s, "󠇯󠇯", f("󠇯󠇯"));
         }
+
+        assert!(solution3a.bitarray.iter().all(|&b| !b), "Bitarray not reset");
+        assert!(solution3b.bitarray.iter().all(|&b| !b), "Bitarray not reset");
     }
 }
