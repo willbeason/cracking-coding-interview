@@ -9,3 +9,5 @@ criterion = "0.5.1"
 [[bench]]
 name = "unique_characters"
 harness = false
+[dependencies]
+rand = "0.9.1"

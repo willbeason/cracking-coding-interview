@@ -49,12 +49,12 @@ mod tests {
     #[test]
     fn test_unique_characters() {
         for (s, f) in SOLUTIONS {
-            assert_eq!(f(""), true, "Solution {}", s);
-            assert_eq!(f("a"), true, "Solution {}", s);
-            assert_eq!(f("aa"), false, "Solution {}", s);
-            assert_eq!(f("ab"), true, "Solution {}", s);
-            assert_eq!(f("abc"), true, "Solution {}", s);
-            assert_eq!(f("abca"), false, "Solution {}", s);
+            assert!(f(""), "Solution {}", s);
+            assert!(f("a"), "Solution {}", s);
+            assert!(!f("aa"), "Solution {}", s);
+            assert!(f("ab"), "Solution {}", s);
+            assert!(f("abc"), "Solution {}", s);
+            assert!(!f("abca"), "Solution {}", s);
         }
     }
 }
