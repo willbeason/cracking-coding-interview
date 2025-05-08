@@ -1,4 +1,4 @@
-package chapter1
+package string_problems
 
 import (
 	"gonum.org/v1/gonum/stat/distuv"

@@ -1,4 +1,4 @@
-package chapter1
+package string_problems
 
 func Solution2A(s string) string {
 	runes := []rune(s)
