@@ -6,7 +6,7 @@ fn bench_unique_unicode(c: &mut Criterion) {
 
     let mut solution3a = UniqueUnicode3A::new();
     let mut solution3b = UniqueUnicode3B::new();
-    
+
     let functions: [(&str, Box<dyn FnMut(&str) -> bool>); 5] = [
         ("solution-1", Box::new(unique_unicode_1)),
         ("solution-2a", Box::new(unique_unicode_2a)),
@@ -15,7 +15,7 @@ fn bench_unique_unicode(c: &mut Criterion) {
         ("solution-3b", Box::new(|s| solution3b.solution(s))),
     ];
 
-    let lengths = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000];
+    let lengths = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000];
     let num_strings = 1024;
     let data: Vec<(usize, Vec<String>)> = lengths
         .iter()

@@ -47,7 +47,7 @@ pub fn unique_unicode_3(s: &str) -> bool {
 
 /// UniqueUnicode3A is a solution that pre-allocates a bit array of all possible Unicode points
 /// to use to identify duplicate characters in strings. Resets the bit array each time it is called.
-/// 
+///
 /// Not threadsafe.
 pub struct UniqueUnicode3A {
     bitarray: Box<[bool; std::char::MAX as usize + 1]>,
@@ -82,41 +82,42 @@ impl UniqueUnicode3A {
 }
 
 /// UniqueUnicode3B is an AI-suggested modification to UniqueUnicode3B.
+/// Additional changes have been manually made.
+///
+/// Not threadsafe.
 pub struct UniqueUnicode3B {
     bitarray: Box<[bool; std::char::MAX as usize + 1]>,
+    modified_positions: Vec<usize>,
 }
 
 impl UniqueUnicode3B {
     pub fn new() -> Self {
         Self {
             bitarray: Box::new([false; std::char::MAX as usize + 1]),
+            modified_positions: Vec::new(),       
         }
     }
 
     pub fn solution(&mut self, s: &str) -> bool {
-        // Keep track of positions we've modified
-        let mut modified_positions = Vec::with_capacity(s.len());
+        // Keep track of the positions we've modified.
+        self.modified_positions.clear();
+        let mut result = true;
 
         for c in s.chars() {
             let pos = c as usize;
             if self.bitarray[pos] {
-                // Reset all modifications before returning
-                for &p in &modified_positions {
-                    self.bitarray[p] = false;
-                }
-                return false;
+                result = false;
+                break;
             }
             self.bitarray[pos] = true;
-            modified_positions.push(pos);
+            self.modified_positions.push(pos);
         }
 
-        // Reset all modifications
-        for &pos in &modified_positions {
-            self.bitarray[pos] = false;
-        }
-        true
+        // Reset all modifications.
+        self.modified_positions.iter().for_each(|&pos| self.bitarray[pos] = false);
+
+        result
     }
-
 }
 
 #[cfg(test)]
