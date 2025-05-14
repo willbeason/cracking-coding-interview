@@ -14,9 +14,14 @@ type NameSolution1 struct {
 }
 
 var solutions = []NameSolution1{
-	{Name: "RemoveDuplicatesMap", F: RemoveDuplicatesMap},
-	{Name: "RemoveDuplicatesArrayUnsorted", F: RemoveDuplicatesArrayUnsorted},
-	{Name: "RemoveDuplicatesArraySorted", F: RemoveDuplicatesArraySorted},
+	{Name: "Map", F: RemoveDuplicatesMap},
+	{Name: "MapUninitialized", F: RemoveDuplicatesMapUninitialized},
+	{Name: "Set", F: RemoveDuplicatesSet},
+	{Name: "NoBuffer", F: RemoveDuplicatesNoBuffer},
+	{Name: "ArrayUnsorted", F: RemoveDuplicatesArrayUnsorted},
+	{Name: "ArraySorted", F: RemoveDuplicatesArraySorted},
+	{Name: "BinaryTree", F: RemoveDuplicatesBinaryTree},
+	{Name: "SearchTree", F: RemoveDuplicatesSearchTree},
 }
 
 func TestProblem1(t *testing.T) {
