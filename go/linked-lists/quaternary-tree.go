@@ -15,19 +15,22 @@ func NewQuaternaryTree(value int) *QuaternaryTree {
 }
 
 func (n *QuaternaryTree) Insert(value int) bool {
-	valueIndex := value % Values
-	if n.Values[valueIndex] == 0 {
-		n.Values[valueIndex] = value
-		return false
-	}
-	if n.Values[valueIndex] == value {
-		return true
-	}
+	for {
+		valueIndex := value % Values
+		if n.Values[valueIndex] == 0 {
+			n.Values[valueIndex] = value
+			return false
+		}
+		if n.Values[valueIndex] == value {
+			return true
+		}
 
-	childIndex := value % Children
-	if n.Children[childIndex] == nil {
-		n.Children[childIndex] = NewQuaternaryTree(value / Children)
-		return false
+		childIndex := value % Children
+		value /= Children
+		if n.Children[childIndex] == nil {
+			n.Children[childIndex] = NewQuaternaryTree(value)
+			return false
+		}
+		n = n.Children[childIndex]
 	}
-	return n.Children[childIndex].Insert(value / Children)
 }
