@@ -1,50 +1,33 @@
 package linked_lists
 
+const Values = 1 << 6
+const Children = 1 << 2
+
 type QuaternaryTree struct {
-	Value0, Value1, Value2, Value3, Value4 int
-	Children                               [4]*QuaternaryTree
+	Values   [Values]int
+	Children [Children]*QuaternaryTree
 }
 
 func NewQuaternaryTree(value int) *QuaternaryTree {
-	return &QuaternaryTree{
-		Value0: value,
-		Value1: -1,
-		Value2: -1,
-		Value3: -1,
-		Value4: -1,
-	}
+	result := &QuaternaryTree{}
+	result.Values[value%Values] = value
+	return result
 }
 
 func (n *QuaternaryTree) Insert(value int) bool {
-	switch {
-	case n.Value0 == value:
-		return true
-	case n.Value1 == -1:
-		n.Value1 = value
+	valueIndex := value % Values
+	if n.Values[valueIndex] == 0 {
+		n.Values[valueIndex] = value
 		return false
-	case n.Value1 == value:
-		return true
-	case n.Value2 == -1:
-		n.Value2 = value
-		return false
-	case n.Value2 == value:
-		return true
-	case n.Value3 == -1:
-		n.Value3 = value
-		return false
-	case n.Value3 == value:
-		return true
-	case n.Value4 == -1:
-		n.Value4 = value
-		return false
-	case n.Value4 == value:
+	}
+	if n.Values[valueIndex] == value {
 		return true
 	}
 
-	childIndex := value % 4
+	childIndex := value % Children
 	if n.Children[childIndex] == nil {
-		n.Children[childIndex] = NewQuaternaryTree(value / 4)
+		n.Children[childIndex] = NewQuaternaryTree(value / Children)
 		return false
 	}
-	return n.Children[childIndex].Insert(value / 4)
+	return n.Children[childIndex].Insert(value / Children)
 }

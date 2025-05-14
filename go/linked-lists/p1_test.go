@@ -98,7 +98,7 @@ func TestProblem1(t *testing.T) {
 func BenchmarkProblem1(b *testing.B) {
 	rng := rand.New(rand.NewSource(time.Now().UnixNano()))
 
-	sizes := []int{100, 1000, 10000}
+	sizes := []int{100, 200, 500, 1000, 2000, 5000, 10000}
 
 	randomLists := make([][]int, len(sizes))
 	for j, size := range sizes {
