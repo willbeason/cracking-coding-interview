@@ -160,3 +160,18 @@ func RemoveDuplicatesSearchTree(head *Node[int]) {
 		}
 	}
 }
+
+// RemoveDuplicatesQuaternaryTree removes entries from a linked list with the same value.
+// Uses a sorted array to record seen values.
+func RemoveDuplicatesQuaternaryTree(head *Node[int]) {
+	if head == nil {
+		return
+	}
+
+	tree := NewQuaternaryTree(head.Value)
+	for ; head != nil; head = head.Next {
+		for head.Next != nil && tree.Insert(head.Next.Value) {
+			head.Next = head.Next.Next
+		}
+	}
+}
