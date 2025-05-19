@@ -7,8 +7,8 @@ type ManualSet struct {
 	Values []int
 }
 
-// NewManualSet constructs a ManualSet of size 2^size and initializes it
-// with value.
+// NewManualSet constructs a ManualSet which can contain up to 2^size entries
+// and initializes it with value.
 func NewManualSet(size, value int) *ManualSet {
 	result := &ManualSet{
 		Mask:   1<<size - 1,

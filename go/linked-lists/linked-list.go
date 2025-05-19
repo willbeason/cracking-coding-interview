@@ -22,7 +22,7 @@ func ToList[T comparable](values ...T) *Node[T] {
 }
 
 func FromList[T comparable](head *Node[T]) []T {
-	var values []T
+	values := make([]T, 0, head.Length())
 	for ; head != nil; head = head.Next {
 		values = append(values, head.Value)
 	}
