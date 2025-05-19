@@ -23,6 +23,7 @@ var solutions = []NameSolution1{
 	{Name: "BinaryTree", F: RemoveDuplicatesBinaryTree},
 	{Name: "SearchTree", F: RemoveDuplicatesSearchTree},
 	{Name: "QuaternaryTree", F: RemoveDuplicatesQuaternaryTree},
+	{Name: "ManualSet", F: RemoveDuplicatesManualMap},
 }
 
 func TestProblem1(t *testing.T) {

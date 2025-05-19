@@ -175,3 +175,23 @@ func RemoveDuplicatesQuaternaryTree(head *Node[int]) {
 		}
 	}
 }
+
+func RemoveDuplicatesManualMap(head *Node[int]) {
+	if head == nil {
+		return
+	}
+
+	length := head.Length()
+	mSize := 1
+	for length > 0 {
+		mSize++
+		length /= 2
+	}
+
+	m := NewManualSet(mSize, head.Value)
+	for ; head != nil; head = head.Next {
+		for head.Next != nil && m.Insert(head.Next.Value) {
+			head.Next = head.Next.Next
+		}
+	}
+}
