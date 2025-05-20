@@ -108,6 +108,11 @@ var tt = []struct {
 		want:   []int{1, 2, 3, 4},
 	},
 	{
+		name:   "four increase decrease 2",
+		before: []int{1, 3, 5, 7, 2, 4, 6, 8},
+		want:   []int{1, 3, 5, 7, 2, 4, 6, 8},
+	},
+	{
 		name:   "five increase decrease",
 		before: []int{1, 2, 3, 4, 5, 5, 4, 3, 2, 1},
 		want:   []int{1, 2, 3, 4, 5},
