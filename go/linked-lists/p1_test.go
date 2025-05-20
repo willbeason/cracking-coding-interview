@@ -117,26 +117,6 @@ func TestProblem1(t *testing.T) {
 	}
 }
 
-func TestProblem1Sorted(t *testing.T) {
-	t.Run("mergesort", func(t *testing.T) {
-		for _, tc := range tt {
-			t.Run(tc.name, func(t *testing.T) {
-				before := ToList(tc.before...)
-				afterList := RemoveDuplicatesMergeSort(before)
-				after := FromList(afterList)
-
-				want := make([]int, len(tc.want))
-				copy(want, tc.want)
-				sort.Ints(want)
-
-				if diff := cmp.Diff(want, after); diff != "" {
-					t.Errorf("%s: %s", "mergesort", diff)
-				}
-			})
-		}
-	})
-}
-
 var sizes = []int{100, 200, 500, 1000, 2000, 5000, 10000}
 
 func BenchmarkProblem1(b *testing.B) {
@@ -164,6 +144,38 @@ func BenchmarkProblem1(b *testing.B) {
 	}
 }
 
+type NameSolution1B struct {
+	Name string
+	F    func(head *Node[int]) *Node[int]
+}
+
+var sortSolutions = []NameSolution1B{
+	{Name: "MergeSort", F: RemoveDuplicatesMergeSort},
+	{Name: "HeapSort", F: RemoveDuplicatesHeapSort},
+}
+
+func TestProblem1Sorted(t *testing.T) {
+	for _, solution := range sortSolutions {
+		t.Run(solution.Name, func(t *testing.T) {
+			for _, tc := range tt {
+				t.Run(tc.name, func(t *testing.T) {
+					before := ToList(tc.before...)
+					afterList := solution.F(before)
+					after := FromList(afterList)
+
+					want := make([]int, len(tc.want))
+					copy(want, tc.want)
+					sort.Ints(want)
+
+					if diff := cmp.Diff(want, after); diff != "" {
+						t.Errorf("%s: %s", "mergesort", diff)
+					}
+				})
+			}
+		})
+	}
+}
+
 func BenchmarkProblem1Sorted(b *testing.B) {
 	rng := rand.New(rand.NewSource(time.Now().UnixNano()))
 
@@ -175,14 +187,16 @@ func BenchmarkProblem1Sorted(b *testing.B) {
 		}
 	}
 
-	for j, size := range sizes {
-		b.Run(fmt.Sprintf("%s@%d", "mergesort", size), func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
-				b.StopTimer()
-				before := ToList(randomLists[j]...)
-				b.StartTimer()
-				RemoveDuplicatesMergeSort(before)
-			}
-		})
+	for _, solution := range solutions {
+		for j, size := range sizes {
+			b.Run(fmt.Sprintf("%s@%d", solution.Name, size), func(b *testing.B) {
+				for i := 0; i < b.N; i++ {
+					b.StopTimer()
+					before := ToList(randomLists[j]...)
+					b.StartTimer()
+					solution.F(before)
+				}
+			})
+		}
 	}
 }

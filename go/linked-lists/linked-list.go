@@ -13,6 +13,13 @@ func (n *Node[T]) Length() int {
 	return length
 }
 
+func (n *Node[T]) At(i int) *Node[T] {
+	for ; i > 0 && n != nil; i-- {
+		n = n.Next
+	}
+	return n
+}
+
 func ToList[T comparable](values ...T) *Node[T] {
 	var head *Node[T]
 	for i := len(values) - 1; i >= 0; i-- {
