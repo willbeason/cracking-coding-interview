@@ -3,80 +3,61 @@ package linked_lists
 // RemoveDuplicatesMergeSort sorts a linked list, removing duplicates as they are
 // encountered. Returns the new first element of the list.
 func RemoveDuplicatesMergeSort(list *Node[int]) *Node[int] {
-	return mergeSort(list)
+	return mergeSort(list, list.Length())
 }
 
-func mergeSort(list *Node[int]) *Node[int] {
-	switch {
-	case list == nil || list.Next == nil:
-		// Already sorted.
-		return list
-	case list.Next.Next == nil:
-		// Trivial to sort in place.
-		if list.Value > list.Next.Value {
-			list.Value, list.Next.Value = list.Next.Value, list.Value
-		} else if list.Value == list.Next.Value {
-			list.Next = nil
-		}
-		return list
-	case list.Next.Next.Next == nil:
-		return sort3(list)
+func mergeSort(list *Node[int], length int) *Node[int] {
+	if length <= 20 {
+		return insertionSort(list)
 	}
 
 	left, right := partitionList(list)
-	left = mergeSort(left)
-	right = mergeSort(right)
+	left = mergeSort(left, (length+1)/2)
+	right = mergeSort(right, length/2)
 
 	return merge(left, right)
 }
 
-func sort3(list *Node[int]) *Node[int] {
-	a := list.Value
-	b := list.Next.Value
-	c := list.Next.Next.Value
-	if a < b {
-		if b < c {
-			// Nothing
-		} else if b == c || a == c {
-			list.Next.Next = nil
-		} else {
-			// b > c
-			if a < c {
-				// b, c = c, b
-				list.Next.Value, list.Next.Next.Value = list.Next.Next.Value, list.Next.Value
-			} else {
-				// a > c
-				// a, b, c = c, a, b
-				list.Value, list.Next.Value, list.Next.Next.Value = list.Next.Next.Value, list.Value, list.Next.Value
-			}
-		}
-	} else if a > b {
-		if b > c {
-			list.Value, list.Next.Next.Value = list.Next.Next.Value, list.Value
-		} else if b == c {
-			list.Next.Next = nil
-			// a, b = b, c
-			list.Value, list.Next.Value = list.Next.Value, list.Value
-		} else {
-			// b < c
-			if a < c {
-				list.Value, list.Next.Value = list.Next.Value, list.Value
-			} else if a > c {
-				list.Value, list.Next.Value, list.Next.Next.Value = list.Next.Value, list.Next.Next.Value, list.Value
-			} else {
-				list.Next.Next = nil
-				list.Value, list.Next.Value = list.Next.Value, list.Value
-			}
-		}
-	} else if a == b {
-		list.Next = list.Next.Next
-		if a > c {
-			list.Value = list.Next.Value
-		} else if a == c {
-			list.Next = nil
-		}
+func insertionSort(list *Node[int]) *Node[int] {
+	if list == nil || list.Next == nil {
+		return list
 	}
-	return list
+
+	start := list
+	list = list.Next
+	start.Next = nil
+
+	for list != nil {
+		if list.Value < start.Value {
+			// Insert before start of list.
+			newStart := list
+			list = list.Next
+			newStart.Next = start
+			start = newStart
+		} else if list.Value > start.Value {
+			// Find element to insert after.
+			head := start
+			for head.Next != nil && head.Next.Value <= list.Value {
+				head = head.Next
+			}
+			if head.Value != list.Value {
+				// Insert after head.
+				inserted := list
+				list = list.Next
+				inserted.Next = head.Next
+				head.Next = inserted
+			} else {
+				// Head and list values are equal.
+				list = list.Next
+			}
+		} else {
+			// Start and list values are equal.
+			list = list.Next
+		}
+
+	}
+
+	return start
 }
 
 func partitionList(list *Node[int]) (*Node[int], *Node[int]) {
