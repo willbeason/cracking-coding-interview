@@ -8,6 +8,7 @@ func RemoveDuplicatesMergeSort(list *Node[int]) *Node[int] {
 
 func mergeSort(list *Node[int], length int) *Node[int] {
 	if length <= 20 {
+		// Lists of length 20 or shorter are faster to sort by insertion sort.
 		return insertionSort(list)
 	}
 
