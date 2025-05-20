@@ -181,6 +181,7 @@ type NameSolution1B struct {
 
 var sortSolutions = []NameSolution1B{
 	{Name: "MergeSort", F: RemoveDuplicatesMergeSort},
+	{Name: "MergeSort2", F: RemoveDuplicatesMergeSort2},
 	{Name: "HeapSort", F: RemoveDuplicatesHeapSort},
 }
 

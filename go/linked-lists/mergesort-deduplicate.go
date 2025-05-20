@@ -7,8 +7,64 @@ func RemoveDuplicatesMergeSort(list *Node[int]) *Node[int] {
 }
 
 func mergeSort(list *Node[int]) *Node[int] {
-	// Already sorted.
-	if list == nil || list.Next == nil {
+	switch {
+	case list == nil || list.Next == nil:
+		// Already sorted.
+		return list
+	case list.Next.Next == nil:
+		// Trivial to sort in place.
+		if list.Value > list.Next.Value {
+			list.Value, list.Next.Value = list.Next.Value, list.Value
+		} else if list.Value == list.Next.Value {
+			list.Next = nil
+		}
+		return list
+	case list.Next.Next.Next == nil:
+		a := list.Value
+		b := list.Next.Value
+		c := list.Next.Next.Value
+		if a < b {
+			if b < c {
+				// Nothing
+			} else if b == c || a == c {
+				list.Next.Next = nil
+			} else {
+				// b > c
+				if a < c {
+					// b, c = c, b
+					list.Next.Value, list.Next.Next.Value = list.Next.Next.Value, list.Next.Value
+				} else {
+					// a > c
+					// a, b, c = c, a, b
+					list.Value, list.Next.Value, list.Next.Next.Value = list.Next.Next.Value, list.Value, list.Next.Value
+				}
+			}
+		} else if a > b {
+			if b > c {
+				list.Value, list.Next.Next.Value = list.Next.Next.Value, list.Value
+			} else if b == c {
+				list.Next.Next = nil
+				// a, b = b, c
+				list.Value, list.Next.Value = list.Next.Value, list.Value
+			} else {
+				// b < c
+				if a < c {
+					list.Value, list.Next.Value = list.Next.Value, list.Value
+				} else if a > c {
+					list.Value, list.Next.Value, list.Next.Next.Value = list.Next.Value, list.Next.Next.Value, list.Value
+				} else {
+					list.Next.Next = nil
+					list.Value, list.Next.Value = list.Next.Value, list.Value
+				}
+			}
+		} else if a == b {
+			list.Next = list.Next.Next
+			if a > c {
+				list.Value = list.Next.Value
+			} else if a == c {
+				list.Next = nil
+			}
+		}
 		return list
 	}
 
