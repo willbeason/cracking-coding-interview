@@ -35,19 +35,26 @@ func heapSort(list *Node[int]) {
 		}
 
 		root := start
-		for child := iLeftChild(root); child < end; child = iLeftChild(root) {
+		for {
+			child := iLeftChild(root)
+			if child >= end {
+				break
+			}
+
 			biggestChild := list.At(child)
-			if biggestChild.Next != nil && biggestChild.Value < biggestChild.Next.Value {
+			if child+1 < end && biggestChild.Value < biggestChild.Next.Value {
 				biggestChild = biggestChild.Next
+				// The bug AI couldn't find.
+				child++
 			}
 
 			parent := list.At(root)
-			if parent.Value < biggestChild.Value {
-				parent.Value, biggestChild.Value = biggestChild.Value, parent.Value
-				root = child
-			} else {
+			if parent.Value >= biggestChild.Value {
 				break
 			}
+
+			parent.Value, biggestChild.Value = biggestChild.Value, parent.Value
+			root = child
 		}
 	}
 }

@@ -78,12 +78,37 @@ var tt = []struct {
 		want:   []int{2, 1},
 	},
 	{
+		name:   "two distinct repeated 3",
+		before: []int{1, 2, 2, 1},
+		want:   []int{1, 2},
+	},
+	{
 		name:   "five distinct",
 		before: []int{1, 2, 3, 4, 5},
 		want:   []int{1, 2, 3, 4, 5},
 	},
 	{
-		name:   "five repeated",
+		name:   "three increase decrease",
+		before: []int{1, 2, 3, 3, 2, 1},
+		want:   []int{1, 2, 3},
+	},
+	{
+		name:   "three increase decrease 2",
+		before: []int{1, 2, 3, 2, 1},
+		want:   []int{1, 2, 3},
+	},
+	{
+		name:   "four increase decrease",
+		before: []int{1, 2, 3, 4, 4, 3, 2, 1},
+		want:   []int{1, 2, 3, 4},
+	},
+	{
+		name:   "four increase decrease 2",
+		before: []int{1, 2, 3, 4, 3, 2, 1},
+		want:   []int{1, 2, 3, 4},
+	},
+	{
+		name:   "five increase decrease",
 		before: []int{1, 2, 3, 4, 5, 5, 4, 3, 2, 1},
 		want:   []int{1, 2, 3, 4, 5},
 	},
@@ -168,7 +193,7 @@ func TestProblem1Sorted(t *testing.T) {
 					sort.Ints(want)
 
 					if diff := cmp.Diff(want, after); diff != "" {
-						t.Errorf("%s: %s", "mergesort", diff)
+						t.Errorf("%s: %s", solution.Name, diff)
 					}
 				})
 			}
@@ -187,7 +212,7 @@ func BenchmarkProblem1Sorted(b *testing.B) {
 		}
 	}
 
-	for _, solution := range solutions {
+	for _, solution := range sortSolutions {
 		for j, size := range sizes {
 			b.Run(fmt.Sprintf("%s@%d", solution.Name, size), func(b *testing.B) {
 				for i := 0; i < b.N; i++ {
