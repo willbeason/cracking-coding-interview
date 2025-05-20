@@ -12,7 +12,7 @@ func mergeSort(list *Node[int], length int) *Node[int] {
 		return insertionSort(list)
 	}
 
-	left, right := partitionList(list)
+	left, right := partitionList(list, length)
 	left = mergeSort(left, (length+1)/2)
 	right = mergeSort(right, length/2)
 
@@ -61,32 +61,16 @@ func insertionSort(list *Node[int]) *Node[int] {
 	return start
 }
 
-func partitionList(list *Node[int]) (*Node[int], *Node[int]) {
+func partitionList(list *Node[int], length int) (*Node[int], *Node[int]) {
 	if list == nil || list.Next == nil {
 		return list, nil
 	}
 
 	// Partition list.
 	leftStart := list
-	rightStart := list.Next
-
-	left := leftStart
-	right := rightStart
-	head := list.Next.Next
-	for head != nil {
-		left.Next = head
-		left = left.Next
-		head = head.Next
-		if head != nil {
-			right.Next = head
-			right = right.Next
-			head = head.Next
-		}
-	}
-	left.Next = nil
-	if right != nil {
-		right.Next = nil
-	}
+	leftEnd := list.At(length/2 - 1)
+	rightStart := leftEnd.Next
+	leftEnd.Next = nil
 
 	return leftStart, rightStart
 }

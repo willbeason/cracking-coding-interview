@@ -1,16 +1,16 @@
 package linked_lists
 
-// ManualSet is a statically sized hash set of integers which uses
+// HashSet is a statically sized hash set of integers which uses
 // the ending bits as a hash.
-type ManualSet struct {
+type HashSet struct {
 	Mask   int
 	Values []int
 }
 
-// NewManualSet constructs a ManualSet which can contain up to 2^size entries
+// NewHashSet constructs a HashSet which can contain up to 2^size entries
 // and initializes it with value.
-func NewManualSet(size, value int) *ManualSet {
-	result := &ManualSet{
+func NewHashSet(size, value int) *HashSet {
+	result := &HashSet{
 		Mask:   1<<size - 1,
 		Values: make([]int, 1<<size),
 	}
@@ -22,7 +22,7 @@ func NewManualSet(size, value int) *ManualSet {
 // Insert adds the value to the set.
 // Returns true if the value is already present.
 // Does not handle the case where the set is full and a new value is added.
-func (m *ManualSet) Insert(value int) bool {
+func (m *HashSet) Insert(value int) bool {
 	idx := value & m.Mask
 	for m.Values[idx] != 0 {
 		if m.Values[idx] == value {

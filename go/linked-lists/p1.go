@@ -188,7 +188,7 @@ func RemoveDuplicatesManualMap(head *Node[int]) {
 		length /= 2
 	}
 
-	m := NewManualSet(mSize, head.Value)
+	m := NewHashSet(mSize, head.Value)
 	for ; head != nil; head = head.Next {
 		for head.Next != nil && m.Insert(head.Next.Value) {
 			head.Next = head.Next.Next

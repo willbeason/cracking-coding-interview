@@ -24,7 +24,7 @@ var solutions = []NameSolution1{
 	{Name: "BinaryTree", F: RemoveDuplicatesBinaryTree},
 	{Name: "SearchTree", F: RemoveDuplicatesSearchTree},
 	{Name: "QuaternaryTree", F: RemoveDuplicatesQuaternaryTree},
-	{Name: "ManualSet", F: RemoveDuplicatesManualMap},
+	{Name: "HashSet", F: RemoveDuplicatesManualMap},
 }
 
 var tt = []struct {
@@ -147,7 +147,7 @@ func TestProblem1(t *testing.T) {
 	}
 }
 
-var sizes = []int{100, 200, 500, 1000, 2000, 5000, 10000}
+var sizes = []int{100, 1000, 10000}
 
 func BenchmarkProblem1(b *testing.B) {
 	rng := rand.New(rand.NewSource(time.Now().UnixNano()))
