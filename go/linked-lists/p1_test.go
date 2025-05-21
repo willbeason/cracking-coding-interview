@@ -24,7 +24,8 @@ var solutions = []NameSolution1{
 	{Name: "BinaryTree", F: RemoveDuplicatesBinaryTree},
 	{Name: "SearchTree", F: RemoveDuplicatesSearchTree},
 	{Name: "QuaternaryTree", F: RemoveDuplicatesQuaternaryTree},
-	{Name: "HashSet", F: RemoveDuplicatesManualMap},
+	{Name: "HashSet", F: RemoveDuplicatesHashSet},
+	{Name: "HashListSet", F: RemoveDuplicatesHashListSet},
 }
 
 var tt = []struct {

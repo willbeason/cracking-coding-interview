@@ -176,7 +176,7 @@ func RemoveDuplicatesQuaternaryTree(head *Node[int]) {
 	}
 }
 
-func RemoveDuplicatesManualMap(head *Node[int]) {
+func RemoveDuplicatesHashSet(head *Node[int]) {
 	if head == nil {
 		return
 	}

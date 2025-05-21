@@ -3,18 +3,18 @@ package linked_lists
 // HashSet is a statically sized hash set of integers which uses
 // the ending bits as a hash.
 type HashSet struct {
-	Mask   int
-	Values []int
+	mask   int
+	values []int
 }
 
 // NewHashSet constructs a HashSet which can contain up to 2^size entries
 // and initializes it with value.
 func NewHashSet(size, value int) *HashSet {
 	result := &HashSet{
-		Mask:   1<<size - 1,
-		Values: make([]int, 1<<size),
+		mask:   1<<size - 1,
+		values: make([]int, 1<<size),
 	}
-	result.Values[value&result.Mask] = value
+	result.values[value&result.mask] = value
 
 	return result
 }
@@ -23,14 +23,14 @@ func NewHashSet(size, value int) *HashSet {
 // Returns true if the value is already present.
 // Does not handle the case where the set is full and a new value is added.
 func (m *HashSet) Insert(value int) bool {
-	idx := value & m.Mask
-	for m.Values[idx] != 0 {
-		if m.Values[idx] == value {
+	idx := value & m.mask
+	for m.values[idx] != 0 {
+		if m.values[idx] == value {
 			return true
 		}
-		idx = (idx + 1) & m.Mask
+		idx = (idx + 1) & m.mask
 	}
-	m.Values[idx] = value
+	m.values[idx] = value
 
 	return false
 }

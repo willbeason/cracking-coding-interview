@@ -21,11 +21,18 @@ func (n *Node[T]) At(i int) *Node[T] {
 }
 
 func ToList[T comparable](values ...T) *Node[T] {
-	var head *Node[T]
-	for i := len(values) - 1; i >= 0; i-- {
-		head = &Node[T]{Value: values[i], Next: head}
+	if len(values) == 0 {
+		return nil
 	}
-	return head
+
+	nodes := make([]Node[T], len(values))
+	for i := range nodes {
+		nodes[i].Value = values[i]
+		if i < len(nodes)-1 {
+			nodes[i].Next = &nodes[i+1]
+		}
+	}
+	return &nodes[0]
 }
 
 func FromList[T comparable](head *Node[T]) []T {
